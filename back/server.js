@@ -17,6 +17,7 @@ const inputationRoutes =require('./routes/impitation.routes')
 const operationRoutes = require('./routes/operation.routes')
 const comptableRoutes = require('./routes/comptable.routes')
 const cors = require('cors'); 
+const PORT = process.env.PORT || 3000;
 
 
 connectDB()
