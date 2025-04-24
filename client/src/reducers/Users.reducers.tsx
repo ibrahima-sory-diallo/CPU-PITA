@@ -1,18 +1,33 @@
 import { GET_USER } from "../components/Action/user.action";
 
+// Définition des types pour le state et l'action
+interface UserState {
+  pseudo: string;
+  uid: string | null;
+}
 
-const initialState = {
-  pseudo: "", // Initialiser un pseudo par défaut si nécessaire
-  uid: null,  // ou tout autre champ que tu utilises
+interface Action {
+  type: string;
+  payload?: {
+    pseudo: string;
+    uid: string;
+  };
+}
+
+// État initial
+const initialState: UserState = {
+  pseudo: "", 
+  uid: null,  
 };
 
-export default function userReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action: Action): UserState {
   switch (action.type) {
     case GET_USER:
+      // Vérification des données dans l'action et gestion de l'absence de payload
       return {
         ...state,
-        pseudo: action.payload.pseudo,
-        uid: action.payload.uid,
+        pseudo: action.payload?.pseudo || "", 
+        uid: action.payload?.uid || null,
       };
 
     default:

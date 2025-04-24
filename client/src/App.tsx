@@ -17,15 +17,35 @@ import Archives from "./pages/Archives";
 import { AuthProvider } from "./components/AuthContext";
 import Files from "./Firebase/archives/FIles";
 
+// Assure-toi d'importer le bon type AppDispatch pour `dispatch`
+import { AppDispatch } from './Store/Store'; // Chemin d'importation correct pour AppDispatch
+
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
-  const [selectedItem, setSelectedItem] = useState("");
-  const [uid, setUid] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [uid, setUid] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>(); // Typage correct de dispatch
   const location = useLocation();
 
+  // Persist dark mode preference
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode) {
+      setDarkMode(JSON.parse(savedDarkMode));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (darkMode) {
+      localStorage.setItem("darkMode", JSON.stringify(true));
+    } else {
+      localStorage.setItem("darkMode", JSON.stringify(false));
+    }
+  }, [darkMode]);
+
+  // Token retrieval and authentication
   useEffect(() => {
     const fetchToken = async () => {
       try {
@@ -33,9 +53,9 @@ function App() {
           withCredentials: true,
         });
         setUid(res.data);
-        dispatch(getUser(res.data));
+        dispatch(getUser(res.data));  // dispatch user info to store
       } catch (err) {
-        console.log("No token");
+        console.error("Token fetch error:", err);
       } finally {
         setLoading(false);
       }
@@ -52,10 +72,12 @@ function App() {
     );
   }
 
+  // Redirect logic: If no uid and not at /Profil, redirect to Profil
   if (!uid && location.pathname !== "/Profil") {
     return <Navigate to="/Profil" />;
   }
 
+  // Redirect to home if the user is logged in and trying to access /Profil
   if (uid && location.pathname === "/Profil") {
     return <Navigate to="/" />;
   }
@@ -70,7 +92,9 @@ function App() {
             setSelectedItem={setSelectedItem}
           />
 
-          <div className={`flex-1 bg-slate-200 ${isOpen ? "md:ml-44" : "ml-16"} transition-all duration-300 dark:bg-slate-800`}>
+          <div
+            className={`flex-1 bg-slate-200 ${isOpen ? "md:ml-44" : "ml-16"} transition-all duration-300 dark:bg-slate-800`}
+          >
             <div className="mb-16">
               <Header
                 darkMode={darkMode}
@@ -79,7 +103,7 @@ function App() {
               />
             </div>
 
-            {/* Toutes les routes ici */}
+            {/* Routes with protected content */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/Dashboard" element={<Dashboard />} />
@@ -88,7 +112,7 @@ function App() {
               <Route path="/Depense" element={<Depense selectedItem={selectedItem} />} />
               <Route path="/Operation" element={<Operation />} />
 
-              {/* ✅ Archives et Files protégés par AuthProvider */}
+              {/* Protected routes */}
               <Route
                 path="/Archives"
                 element={

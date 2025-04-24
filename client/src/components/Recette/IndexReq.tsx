@@ -19,13 +19,13 @@ interface Chapitre {
   taux: number;
   encours: number; 
   articles: any[];
+  sectionId: string;
   hasArticle: boolean;
 }
 
 interface SectionFonctionnementProps {
   selectedItem: string | null;
   setSelectedItem: (item: string | null) => void;
-  section:Section
 }
 
 export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
