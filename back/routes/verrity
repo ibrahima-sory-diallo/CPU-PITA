@@ -1,0 +1,10 @@
+const express = require('express');
+
+const nomenclatureController = require('../controllers/paragrapheController')
+const router = express.Router();
+
+router.post('/add',nomenclatureController.addImputationToNomenclature)
+
+
+module.exports = router;
+ 
