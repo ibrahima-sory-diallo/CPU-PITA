@@ -1,5 +1,5 @@
 
-const UserModal = require('../models/usermodel')
+const UserModal = require('../models/userModel')
 const ObjectID = require('mongoose').Types.ObjectId;
 //afficher tous les utilisateurs
 module.exports.getAllUsers = async (req, res) => {
