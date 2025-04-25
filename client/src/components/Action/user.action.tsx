@@ -24,7 +24,7 @@ export const getUser = (
 ): ThunkAction<Promise<void>, RootState, unknown, AnyAction> => {
   return async (dispatch) => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}api/user/${uid}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${uid}`);
       dispatch({ type: GET_USER, payload: res.data });
     } catch (err) {
       console.log(err);
