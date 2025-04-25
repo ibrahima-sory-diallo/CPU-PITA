@@ -19,7 +19,7 @@ module.exports.signUp = async (req, res) => {
         });
 
         const token = createToken(user._id, user.role);
-        res.cookie('jwt', token, { httpOnly: true, maxAge, secure: process.env.NODE_ENV === 'production' });
+        res.cookie('jwt', token, { httpOnly: true, maxAge,sameSite: 'None', sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', });
 
         res.status(201).json({ user: user._id, role: user.role });
     } catch (err) {
@@ -35,7 +35,7 @@ module.exports.signIn = async (req, res) => {
         const user = await UserModal.login(email, password); 
         
         const token = createToken(user.id, user.role);
-        res.cookie('jwt', token, { httpOnly: true, maxAge });
+        res.cookie('jwt', token, { httpOnly: true, maxAge,sameSite: 'None', sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', });
 
         res.status(200).json({ message: "Utilsateur connecté"});
     } catch (err) {
