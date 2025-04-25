@@ -21,7 +21,7 @@ export const useInputationsParMoisParSection = () => {
         setLoading(true);
 
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}api/inputation/getInputationsParMoisParSection`
+          `${import.meta.env.VITE_API_URL}/api/inputation/getInputationsParMoisParSection`
         );
 
         const data = res.data;

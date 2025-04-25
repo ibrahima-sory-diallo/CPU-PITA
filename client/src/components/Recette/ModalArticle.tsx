@@ -31,7 +31,7 @@ const ModalArticle: React.FC<ModalArticleProps> = ({ chapitreId, onClose, onSucc
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/article/createArticle/${chapitreId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/article/createArticle/${chapitreId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

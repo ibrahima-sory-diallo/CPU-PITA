@@ -49,7 +49,7 @@ function App() {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}jwtid`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/jwtid`, {
           withCredentials: true,
         });
         setUid(res.data);

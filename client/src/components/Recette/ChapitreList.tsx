@@ -41,7 +41,7 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
   
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}api/chapitre/updateChapitre/${editingChapitre._id}`,
+        `${import.meta.env.VITE_API_URL}/api/chapitre/updateChapitre/${editingChapitre._id}`,
         {
           method: 'PUT',
           body: JSON.stringify(editingChapitre),

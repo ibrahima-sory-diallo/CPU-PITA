@@ -36,7 +36,7 @@ export const ModalParagrapheCreation: React.FC<ModalParagrapheCreationProps> = (
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}api/paragraphe/createParagraphe/${paragrapheMerId}`,
+        `${import.meta.env.VITE_API_URL}/api/paragraphe/createParagraphe/${paragrapheMerId}`,
         {
           method: 'POST',
           headers: {

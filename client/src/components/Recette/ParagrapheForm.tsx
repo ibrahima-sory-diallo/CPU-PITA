@@ -30,7 +30,7 @@ export const CreateParagrapheForm: React.FC<CreateParagrapheFormProps> = ({
 
     try {
       // Envoi de la requête pour créer un paragraphe
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/paragraphe/createParagraphe/${selectedChapitreId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/paragraphe/createParagraphe/${selectedChapitreId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

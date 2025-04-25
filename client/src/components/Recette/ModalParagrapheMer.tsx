@@ -29,7 +29,7 @@ export const ModalParagrapheMerCreation: React.FC<ModalParagrapheMerCreationProp
       }
       
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}api/paragrapheMer/createParagrapheMer/${articleId}`,
+        `${import.meta.env.VITE_API_URL}/api/paragrapheMer/createParagrapheMer/${articleId}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

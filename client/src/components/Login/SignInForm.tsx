@@ -30,7 +30,7 @@ const SignInForm: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}api/user/login`,
+        `${import.meta.env.VITE_API_URL}/api/user/login`,
         { email, password },
         { withCredentials: true }
       );

@@ -61,7 +61,7 @@ const SignUpForm = () => {
 
     axios({
       method: "post",
-      url: `${import.meta.env.VITE_API_URL}api/user/register`, // Assure-toi que l'URL est correcte
+      url: `${import.meta.env.VITE_API_URL}/api/user/register`, // Assure-toi que l'URL est correcte
       withCredentials: true,
       data: { pseudo, email, password, role },
     })

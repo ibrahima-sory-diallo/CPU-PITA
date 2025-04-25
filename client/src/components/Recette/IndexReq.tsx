@@ -46,7 +46,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
 
   const fetchAnnees = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/comptable/tousAnnee`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/comptable/tousAnnee`);
       const data = await response.json();
       setAnnees(data.map((annee: { annee: number }) => annee.annee));
     } catch (error) {
@@ -57,7 +57,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
 
   const fetchSections = async (anneeId: number) => {
     setLoadingSections(true);
-    const url = `${import.meta.env.VITE_API_URL}api/section/sections/annee/${anneeId}`;
+    const url = `${import.meta.env.VITE_API_URL}/api/section/sections/annee/${anneeId}`;
     try {
       const response = await fetch(url);
       if (response.ok) {
@@ -80,7 +80,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
     setChapitres([]);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}api/chapitre/getChapitresBySection/${sectionId}`
+        `${import.meta.env.VITE_API_URL}/api/chapitre/getChapitresBySection/${sectionId}`
       );
       const data = await response.json();
       setChapitres(data.chapitres || []);
@@ -96,7 +96,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
     setLoadingChapitres(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}api/chapitre/sectionDetails/${sectionId}/${annee}`
+        `${import.meta.env.VITE_API_URL}/api/chapitre/sectionDetails/${sectionId}/${annee}`
       );
       const data = await response.json();
       if (data.section && data.section.chapitres) {

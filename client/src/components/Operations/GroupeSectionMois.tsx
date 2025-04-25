@@ -30,7 +30,7 @@ const InputationsParMoisParSection: React.FC = () => {
   useEffect(() => {
       const fetchInputations = async () => {
         try {
-          const res = await axios.get<DataParSection>(`${import.meta.env.VITE_API_URL}api/inputation/getInputationsParMoisParSection`);
+          const res = await axios.get<DataParSection>(`${import.meta.env.VITE_API_URL}/api/inputation/getInputationsParMoisParSection`);
           console.log("Données reçues:", res.data);
           setData(res.data);
         } catch (err) {
@@ -45,7 +45,7 @@ const InputationsParMoisParSection: React.FC = () => {
     const fetchSoldePrecedent = async () => {
       try {
         const res = await axios.get<Inputation[]>(
-          `${import.meta.env.VITE_API_URL}api/inputation/getSoldeAnneePrecedente/${currentYear - 1}`
+          `${import.meta.env.VITE_API_URL}/api/inputation/getSoldeAnneePrecedente/${currentYear - 1}`
         );
         const recettes = res.data
           .filter((i) => i.section?.toLowerCase().includes("recette"))

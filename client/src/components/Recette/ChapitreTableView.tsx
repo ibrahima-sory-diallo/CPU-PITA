@@ -99,7 +99,7 @@ const ChapitreTableView: React.FC<Props> = ({
 
       const paragrapheId = updated._id;
   
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/paragraphe/updateParagraphe/${paragrapheId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/paragraphe/updateParagraphe/${paragrapheId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

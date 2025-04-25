@@ -37,7 +37,7 @@ const ComptableApp: React.FC = () => {
   const createAnnee = async () => {
     if (!isValidYear(annee)) return setError('Année invalide');
     try {
-      const data = await apiRequest(`${import.meta.env.VITE_API_URL}api/comptable/creerAnnee/${annee}`, 'POST');
+      const data = await apiRequest(`${import.meta.env.VITE_API_URL}/api/comptable/creerAnnee/${annee}`, 'POST');
       setMessage(data.message);
       setError('');
       fetchAnnees();
@@ -50,7 +50,7 @@ const ComptableApp: React.FC = () => {
   const cloturerAnnee = async () => {
     if (!isValidYear(anneeCloture)) return setError('Année de clôture invalide');
     try {
-      const data = await apiRequest(`${import.meta.env.VITE_API_URL}api/comptable/cloturer/${anneeCloture}`, 'POST');
+      const data = await apiRequest(`${import.meta.env.VITE_API_URL}/api/comptable/cloturer/${anneeCloture}`, 'POST');
       setMessage(data.message);
       setError('');
       fetchAnnees();
@@ -67,7 +67,7 @@ const ComptableApp: React.FC = () => {
     }
     try {
       const body = { name: nomSection, titre: titreSection };
-      const url = `${import.meta.env.VITE_API_URL}api/section/creerSection/${selectedComptableId}`;
+      const url = `${import.meta.env.VITE_API_URL}/api/section/creerSection/${selectedComptableId}`;
       const data = await apiRequest(url, 'POST', body);
   
       setMessage(data.message);
@@ -86,7 +86,7 @@ const ComptableApp: React.FC = () => {
   const fetchDonnees = async () => {
     if (!isValidYear(annee)) return setError('Année invalide');
     try {
-      const data = await apiRequest(`${import.meta.env.VITE_API_URL}api/comptable/donnees/${annee}`);
+      const data = await apiRequest(`${import.meta.env.VITE_API_URL}/api/comptable/donnees/${annee}`);
       setSections(data); // Mise à jour des sections avec les données récupérées
       setMessage('');
       setError('');
@@ -98,7 +98,7 @@ const ComptableApp: React.FC = () => {
 
   const fetchAnnees = async () => {
     try {
-      const data = await apiRequest(`${import.meta.env.VITE_API_URL}api/comptable/tousAnnee`);
+      const data = await apiRequest(`${import.meta.env.VITE_API_URL}/api/comptable/tousAnnee`);
       setAnnees(data); // Mise à jour des années comptables disponibles
       setMessage('');
       setError('');

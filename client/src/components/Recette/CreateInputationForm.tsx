@@ -30,7 +30,7 @@ export const CreateInputationForm: React.FC<CreateInputationFormProps> = ({ onCr
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/inputation/createInputation/${paragrapheId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/inputation/createInputation/${paragrapheId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

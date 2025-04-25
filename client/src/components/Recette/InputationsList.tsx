@@ -42,7 +42,7 @@ export const InputationsList: React.FC<InputationsListProps> = ({
     if (inputationToDelete) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}api/inputation/deleteInputation/${inputationToDelete}`,
+          `${import.meta.env.VITE_API_URL}/api/inputation/deleteInputation/${inputationToDelete}`,
           { method: 'DELETE' }
         );
         if (!response.ok) throw new Error("Erreur lors de la suppression");
@@ -69,7 +69,7 @@ export const InputationsList: React.FC<InputationsListProps> = ({
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}api/inputation/updateInputation/${editingInputation._id}`,
+        `${import.meta.env.VITE_API_URL}/api/inputation/updateInputation/${editingInputation._id}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -152,8 +152,8 @@ export const InputationsList: React.FC<InputationsListProps> = ({
     <div className="mt-4">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-xl font-bold">Imputations pour {paragrapheNom}</h3>
-        <div className="space-x-2">
-          <button onClick={exportToExcel} className="bg-teal-700 text-white px-3 py-1  hover:bg-blue-700 rounded-md">
+        <div className="space-x-2 flex">
+          <button onClick={exportToExcel} className="bg-teal-700 text-white px-3   hover:bg-blue-700 rounded-md">
             Exporter Excel
           </button>
           <button onClick={printTable} className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-700">

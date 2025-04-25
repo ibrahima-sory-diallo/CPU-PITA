@@ -19,7 +19,7 @@ const Logout = () => {
       // Faire une requête GET à l'API pour déconnecter l'utilisateur
       await axios({
         method: "get",
-        url: `${import.meta.env.VITE_API_URL}api/user/logout`,
+        url: `${import.meta.env.VITE_API_URL}/api/user/logout`,
         withCredentials: true,
       });
 

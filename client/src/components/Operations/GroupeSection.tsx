@@ -43,7 +43,7 @@ const ChapitresParSection: React.FC = () => {
   useEffect(() => {
     const fetchChapitresParSection = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}api/chapitre/groupBySectionName`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/chapitre/groupBySectionName`);
         setData(res.data);
       } catch (err) {
         console.error('Erreur lors de la récupération des chapitres par section :', err);

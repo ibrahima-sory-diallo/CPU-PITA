@@ -29,7 +29,7 @@ const ChapitreForm: React.FC<ChapitreFormProps> = ({ sectionId, onClose, onSucce
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/chapitre/createChapitre/${sectionId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chapitre/createChapitre/${sectionId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

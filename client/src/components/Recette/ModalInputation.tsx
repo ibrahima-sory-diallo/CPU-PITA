@@ -49,7 +49,7 @@ export const ModalInputation: React.FC<ModalInputationProps> = ({ paragraphe, on
   const fetchInputations = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/inputation/getInputations/${paragraphe._id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/inputation/getInputations/${paragraphe._id}`);
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération des imputations');
       }
