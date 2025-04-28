@@ -24,6 +24,13 @@ export const ModalParagrapheCreation: React.FC<ModalParagrapheCreationProps> = (
       setSuccessMessage(null);
       return;
     }
+          // ✅ Optimistic update : montrer tout de suite que ça marche
+          setSuccessMessage('Paragraphe créé avec succès !');
+          setError(null);
+          setNom('');
+          setNumero(undefined);
+          onSuccess?.();
+      
 
     const newParagraphe: any = {
       nom,
@@ -112,7 +119,7 @@ export const ModalParagrapheCreation: React.FC<ModalParagrapheCreationProps> = (
 
         <div className="flex justify-end">
           <button onClick={onClose} className="mr-2 p-2 bg-gray-500 text-white rounded-md">
-            Annuler
+            Quitter
           </button>
           <button onClick={handleSave} className="p-2 bg-teal-500 text-white rounded-md">
             Enregistrer

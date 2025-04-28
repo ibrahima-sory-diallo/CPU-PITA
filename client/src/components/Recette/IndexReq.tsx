@@ -195,7 +195,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
           {filteredSections.map((section) => (
             <div key={section._id} className="bg-white p-3 rounded shadow m-1">
               <h2 className="text-xl font-bold">{section.name}</h2>
-              <p>{section.titre}</p>
+              <p className='font-bold'>TITRE :{section.titre}</p>
 
               <button
                 className="mt-2 px-4 py-2 bg-teal-700 text-white rounded m-1"

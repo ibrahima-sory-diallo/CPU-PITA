@@ -226,9 +226,9 @@ const ChapitreTableView: React.FC<Props> = ({
     rows.push(
       <>
         {/* Ligne de total pour la section */}
-        <tr key="total-section" className="bg-yellow-100 font-extrabold">
+        <tr key="total-section" className="bg-slate-50 font-extrabold">
           <td className="border border-gray-400 p-2 text-center" colSpan={5}>
-            TOTAL {section?.titre ?? "Section inconnue"}
+            TOTAL {section?.name} De {section?.titre ?? "Section inconnue"}
           </td>
           <td className="border border-gray-400 p-2">{previsionTotal}</td>
           <td className="border border-gray-400 p-2">{realisationTotal}</td>
@@ -237,7 +237,7 @@ const ChapitreTableView: React.FC<Props> = ({
         </tr>
 
         {/* Vérification de "Section Investissement" */}
-        {section?.titre === "Section Investissement" && (
+        {section?.titre === "Investissement" && (
           (() => {
             // Trouver le chapitre numéro 65
             const chapitre65 = chapitres.find(c => c.numero === 65);
@@ -259,9 +259,9 @@ const ChapitreTableView: React.FC<Props> = ({
             return (
               <>
                 {/* Total Réel pour la section Investissement */}
-                <tr key="total-sectionReelle-1" className="bg-yellow-200 font-extrabold">
+                <tr key="total-sectionReelle-1" className="bg-white font-extrabold">
                   <td className="border border-gray-400 p-2 text-center" colSpan={5}>
-                    TOTAL Réel {section.titre}
+                    TOTAL {section.name} Réelles {section.titre}
                   </td>
                   <td className="border border-gray-400 p-2">{totalPrevisionReel}</td>
                   <td className="border border-gray-400 p-2">{totalRealisationReel}</td>
@@ -287,7 +287,7 @@ const ChapitreTableView: React.FC<Props> = ({
       </div>
 
       <h2 className="text-xl font-bold text-center mb-4 text-teal-900">
-        Section : {section?.name ?? "Section inconnue"}
+        {section?.titre} : {section?.name ?? "Section inconnue"}
       </h2>
 
       <table ref={tableRef} className="table-auto w-full border-collapse border border-gray-800">

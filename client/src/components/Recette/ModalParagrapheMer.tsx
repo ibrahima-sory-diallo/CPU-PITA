@@ -19,6 +19,12 @@ export const ModalParagrapheMerCreation: React.FC<ModalParagrapheMerCreationProp
       setSuccessMessage(null);
       return;
     }
+      // ✅ Optimistic update : montrer tout de suite que ça marche
+    setSuccessMessage('ParagrapheMer créé avec succès !');
+    setError(null);
+    setNom('');
+    setNumero(undefined);
+    onSuccess?.();
 
     const newParagraphe = { nom, numero };
 

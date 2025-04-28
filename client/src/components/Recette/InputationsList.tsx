@@ -66,18 +66,24 @@ export const InputationsList: React.FC<InputationsListProps> = ({
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingInputation) return;
-
+  
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/inputation/updateInputation/${editingInputation._id}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            numero: formData.numero,
+            date: formData.date,
+            mdt: formData.mdt,
+            beneficiaire: formData.beneficiaire,
+            montant: formData.montant,
+          }),
         }
       );
       if (!response.ok) throw new Error("Erreur lors de la mise à jour");
-
+  
       setNotification("Imputation mise à jour avec succès !");
       setEditingInputation(null);
       onRefresh();
@@ -86,6 +92,7 @@ export const InputationsList: React.FC<InputationsListProps> = ({
       setNotification("Erreur lors de la mise à jour.");
     }
   };
+  
 
   const filteredInputations = inputations.filter((i) => {
     return (
@@ -259,9 +266,6 @@ export const InputationsList: React.FC<InputationsListProps> = ({
               </label>
               <label className="block mb-2">Montant :
                 <input type="number" value={formData.montant ?? ''} onChange={(e) => setFormData({ ...formData, montant: Number(e.target.value) })} className="block border p-1 w-full" />
-              </label>
-              <label className="block mb-4">Montant Cumulé :
-                <input type="number" value={formData.montantCumulle ?? ''} onChange={(e) => setFormData({ ...formData, montantCumulle: Number(e.target.value) })} className="block border p-1 w-full" />
               </label>
               <div className="flex justify-end space-x-2">
                 <button type="button" onClick={() => setEditingInputation(null)} className="bg-gray-500 text-white px-4 py-1 rounded">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Article {
   _id: string;
@@ -15,7 +15,7 @@ interface Chapitre {
   taux: number;
   encours: number;
   articles: Article[];
-  sectionId: string; // Nécessaire pour actualiser la section
+  sectionId: string;
 }
 
 interface ChapitreTablesProps {
@@ -23,9 +23,15 @@ interface ChapitreTablesProps {
   refreshChapitres: (sectionId: string) => void;
 }
 
-export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refreshChapitres }) => {
+export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres: initialChapitres, }) => {
+  const [chapitres, setChapitres] = useState<Chapitre[]>(initialChapitres);
   const [editingChapitre, setEditingChapitre] = useState<Chapitre | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Synchroniser chapitres si la prop change
+  useEffect(() => {
+    setChapitres(initialChapitres);
+  }, [initialChapitres]);
 
   const handleDoubleClick = (chapitre: Chapitre) => {
     setEditingChapitre(chapitre);
@@ -39,6 +45,20 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
   const handleSave = async () => {
     if (!editingChapitre) return;
   
+    // ✅ Mise à jour immédiate locale (optimistic update)
+    setChapitres((prevChapitres) =>
+      prevChapitres.map((chap) =>
+        chap._id === editingChapitre._id ? editingChapitre : chap
+      )
+    );
+  
+    // ✅ Fermer la modale immédiatement
+    handleCloseModal();
+  
+    // ✅ Message de succès immédiat
+    setMessage({ type: 'success', text: 'Chapitre mis à jour localement.' });
+  
+    // ✅ Envoi en arrière-plan
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/chapitre/updateChapitre/${editingChapitre._id}`,
@@ -49,33 +69,28 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
         }
       );
   
-      if (!res.ok) throw new Error('Erreur lors de la mise à jour');
+      if (!res.ok) throw new Error('Erreur serveur');
   
-      setMessage({ type: 'success', text: 'Chapitre mis à jour avec succès.' });
+      // (Optionnel) re-synchroniser après si tu veux
+      // await refreshChapitres(editingChapitre.sectionId);
   
-      refreshChapitres(editingChapitre.sectionId);
-  
-      // Attendre que le message soit visible avant de fermer la modale
-      setTimeout(() => {
-        setMessage(null);
-        handleCloseModal();
-      }, 2000);
     } catch (error) {
-      setMessage({ type: 'error', text: "Échec de la mise à jour du chapitre." });
-  
-      // Supprimer le message d'erreur après 3s, sans fermer la modale
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
+      console.error(error);
+      setMessage({ type: 'error', text: "Échec de la synchronisation avec le serveur." });
     }
-  };  
+  
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+  
 
   const totals = chapitres.reduce(
     (acc, chapitre) => {
-      acc.prevision += chapitre.prevision;
-      acc.realisation += chapitre.realisation;
-      acc.taux += chapitre.taux * 100;
-      acc.encours += chapitre.encours;
+      acc.prevision += chapitre.prevision??0;
+      acc.realisation += chapitre.realisation??0;
+      acc.taux += (chapitre.taux??0) * 100;
+      acc.encours += chapitre.encours??0;
       return acc;
     },
     { prevision: 0, realisation: 0, encours: 0, taux: 0 }
@@ -147,9 +162,7 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
               <input
                 type="number"
                 value={editingChapitre.numero}
-                onChange={(e) =>
-                  setEditingChapitre({ ...editingChapitre, numero: +e.target.value })
-                }
+                onChange={(e) => setEditingChapitre({ ...editingChapitre, numero: +e.target.value })}
                 className="border p-1 w-full mt-1"
               />
             </label>
@@ -158,9 +171,7 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
               <input
                 type="text"
                 value={editingChapitre.nom}
-                onChange={(e) =>
-                  setEditingChapitre({ ...editingChapitre, nom: e.target.value })
-                }
+                onChange={(e) => setEditingChapitre({ ...editingChapitre, nom: e.target.value })}
                 className="border p-1 w-full mt-1"
               />
             </label>
@@ -169,9 +180,7 @@ export const ChapitreTables: React.FC<ChapitreTablesProps> = ({ chapitres, refre
               <input
                 type="number"
                 value={editingChapitre.prevision}
-                onChange={(e) =>
-                  setEditingChapitre({ ...editingChapitre, prevision: +e.target.value })
-                }
+                onChange={(e) => setEditingChapitre({ ...editingChapitre, prevision: +e.target.value })}
                 className="border p-1 w-full mt-1"
               />
             </label>
