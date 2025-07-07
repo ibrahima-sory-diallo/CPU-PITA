@@ -14,9 +14,11 @@ const articleRoutes = require('./routes/article.routes')
 const paragrapheMerRoutes = require('./routes/paragrapheMer.routes')
 const paragrapheRoutes = require('./routes/paragraphe.routes')
 const inputationRoutes =require('./routes/impitation.routes')
-const operationRoutes = require('./routes/operation.routes')
 const comptableRoutes = require('./routes/comptable.routes')
+const uploadRoutes = require('./routes/upload.routes');
+const emailRoutes = require('./routes/email.routes')
 const cors = require('cors'); 
+const { blacklist } = require('validator');
 const PORT = process.env.PORT || 3000;
 
 
@@ -56,8 +58,9 @@ app.use('/api/article', articleRoutes)
 app.use('/api/paragrapheMer', paragrapheMerRoutes)
 app.use('/api/paragraphe', paragrapheRoutes)
 app.use('/api/inputation', inputationRoutes)
-app.use('/api/operation', operationRoutes)
 app.use('/api/comptable', comptableRoutes)
+app.use('/api/archive', uploadRoutes);
+app.use('/api/email', emailRoutes);
 
 
 //routes
@@ -67,4 +70,3 @@ app.use('/api/user', userRoutes)
 app.listen(process.env.PORT, () => {
     console.log(`Le server est connecter sur le port ${process.env.PORT}`);
 });
-

@@ -1,9 +1,9 @@
-
-import ComptableApp from '../components/Annee/Annee'
+import DuplicationAnnee from '../components/Annee/DipliquerAnnee'
 
 function Analytics() {
   return (
-    <div><ComptableApp/></div>
+    // <div><ComptableApp/></div>
+    <div><DuplicationAnnee/></div>
   )
 }
 

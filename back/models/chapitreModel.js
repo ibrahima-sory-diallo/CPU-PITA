@@ -40,8 +40,8 @@ const chapitreSchema = new Schema({
   },
   statut: {
     type: String,
-    enum: ["active", "clôturé"],
-    default: "active",
+    enum: ["ouvert", "fermé"],
+    default: "ouvert",
   },
   sectionId: {
     type: Schema.Types.ObjectId,

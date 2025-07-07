@@ -36,8 +36,8 @@ const paragrapheMerSchema = new Schema({
     }, 
     statut: {
         type: String,
-        enum: ["active", "clôturé"], // Le statut "clôturé" ici
-        default: "active",
+        enum: ["ouvert", "fermé"], // Le statut "clôturé" ici
+        default: "ouvert",
       },
     articleId: { 
         type: Schema.Types.ObjectId, 

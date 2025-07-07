@@ -18,8 +18,8 @@ const articleSchema= new Schema({
     }, 
     statut: {
         type: String,
-        enum: ["active", "clôturé"], // Le statut "clôturé" ici
-        default: "active",
+        enum: ["ouvert", "fermé"], // Le statut "clôturé" ici
+        default: "ouvert",
       },
     paragraphesMers: [{
         type: Schema.Types.ObjectId,

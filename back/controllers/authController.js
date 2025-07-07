@@ -9,11 +9,11 @@ const createToken = (id, role) => {
 
 module.exports.signUp = async (req, res) => {
     console.log("Données reçues :", req.body); // Debugging ici
-    const { pseudo, email, password, role } = req.body;
+    const {   pseudo, email, password, role } = req.body;
     try {
         const user = await UserModal.create({ 
             pseudo, 
-            email, 
+            email,   
             password, 
             role: role || 'utilisateur' 
         });
@@ -25,6 +25,7 @@ module.exports.signUp = async (req, res) => {
         });
 
         res.status(201).json({ user: user._id, role: user.role });
+    
     } catch (err) {
         console.log("Erreur lors de l'inscription :", err); // 🔍 Voir l'erreur exacte
         const errors = signUpErrors(err);

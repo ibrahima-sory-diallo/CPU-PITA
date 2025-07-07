@@ -20,8 +20,8 @@ const InputationSchema = new Schema({
     },
     statut: {
         type: String,
-        enum: ["active", "clôturé"],
-        default: "active"
+        enum: ["ouvert", "fermé"],
+        default: "ouvert"
     },
     paragrapheId: {
         type: Schema.Types.ObjectId,

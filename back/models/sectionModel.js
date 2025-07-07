@@ -13,8 +13,8 @@ const sectionSchema = new Schema(
     },
     statut: {
       type: String,
-      enum: ["active", "clôturée"],
-      default: "active",
+      enum: ["ouvert", "fermé"],
+      default: "ouvert",
     },
     dateCloture: {
       type: Date,

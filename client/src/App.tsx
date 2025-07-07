@@ -13,12 +13,13 @@ import Recette from "./pages/Recette";
 import Depense from "./pages/Depense";
 import Operation from "./pages/Operation";
 import Analytics from "./pages/Analytics";
-import Archives from "./pages/Archives";
-import { AuthProvider } from "./components/AuthContext";
-import Files from "./Firebase/archives/FIles";
-
 // Assure-toi d'importer le bon type AppDispatch pour `dispatch`
 import { AppDispatch } from './Store/Store'; // Chemin d'importation correct pour AppDispatch
+import Ajouter from "./pages/AjouterArchive";
+import ListeArchive from "./pages/ListeArchive";
+import Email from "./pages/Email";
+import AjouterSection from "./pages/AjouterSection";
+import Utilisateur from "./pages/Utilisateur";
 
 function App() {
   const [darkMode, setDarkMode] = useState<boolean>(false);
@@ -86,14 +87,16 @@ function App() {
     <UidContent.Provider value={uid}>
       {uid ? (
         <div className={`flex font-Montserrat bg-slate-700 ${darkMode && "dark"}`}>
+          <div className="">
           <Sidebar
             isOpen={isOpen}
             toggleSidebar={() => setIsOpen(!isOpen)}
             setSelectedItem={setSelectedItem}
           />
+          </div>
 
           <div
-            className={`flex-1 bg-slate-200 ${isOpen ? "md:ml-44" : "ml-16"} transition-all duration-300 dark:bg-slate-800`}
+            className={`flex-1  bg-slate-200 ${isOpen ? "md:ml-48" : "ml-16"} transition-all duration-300 dark:bg-slate-800`}
           >
             <div className="mb-16">
               <Header
@@ -107,28 +110,15 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/Analytics" element={<Analytics />} />
+              <Route path="/Gestion Année" element={<Analytics />} />
+              <Route path="/Ajouter section" element={<AjouterSection />} />
               <Route path="/Recette" element={<Recette selectedItem={selectedItem} />} />
               <Route path="/Depense" element={<Depense selectedItem={selectedItem} />} />
               <Route path="/Operation" element={<Operation />} />
-
-              {/* Protected routes */}
-              <Route
-                path="/Archives"
-                element={
-                  <AuthProvider>
-                    <Archives />
-                  </AuthProvider>
-                }
-              />
-              <Route
-                path="/files/:fileId"
-                element={
-                  <AuthProvider>
-                    <Files />
-                  </AuthProvider>
-                }
-              />
+              <Route path="/Ajouter" element={ <Ajouter />} />
+              <Route path="/Listes" element={ <ListeArchive />} />
+              <Route path="/Email" element={ <Email />} />
+              <Route path="/Utilisateurs" element={ <Utilisateur />} />
             </Routes>
           </div>
         </div>

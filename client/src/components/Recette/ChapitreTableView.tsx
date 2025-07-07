@@ -90,15 +90,16 @@ const ChapitreTableView: React.FC<Props> = ({
   const [selectedParagraphe, setSelectedParagraphe] = useState<Paragraphe | null>(null);
 
   const rowsPerPage = 15;
-  const getTaux = (realisation: number, prevision: number) =>
-    prevision > 0 ? `${((realisation / prevision) * 100).toFixed(0)} %` : '-';
 
+  // getTaux retourne un nombre (sans le symbole %) pour permettre calculs
+  const getTaux = (realisation: number, prevision: number): number =>
+    prevision > 0 ? (realisation / prevision) * 100 : 0;
+
+  const formatTaux = (taux: number) => (taux > 0 ? `${Math.round(taux)} %` : '-');
 
   const onSaveParagraphe = async (updated: Paragraphe) => {
     try {
-
       const paragrapheId = updated._id;
-  
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/paragraphe/updateParagraphe/${paragrapheId}`, {
         method: 'PUT',
         headers: {
@@ -106,28 +107,27 @@ const ChapitreTableView: React.FC<Props> = ({
         },
         body: JSON.stringify(updated),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Erreur lors de l'update : ${response.statusText}`);
       }
-  
+
       const result = await response.json();
       console.log('Réponse du serveur :', result);
-  
+
       return true;
     } catch (error) {
       console.error('Erreur lors de la requête PUT:', error);
       return false;
     }
   };
-    
-  
+
   const flattenedRows = useMemo(() => {
     const rows: JSX.Element[] = [];
 
     chapitres.forEach((chapitre) => {
       rows.push(
-        <tr key={chapitre._id} className="bg-gray-100">
+        <tr key={`chapitre-${chapitre._id}`} className="bg-gray-100">
           <td
             className="border border-gray-400 p-2 font-black cursor-pointer hover:bg-blue-100"
             title="Ajouter l'article"
@@ -141,14 +141,14 @@ const ChapitreTableView: React.FC<Props> = ({
           <td className="border border-gray-400 p-2 font-black">{chapitre.nom}</td>
           <td className="border border-gray-400 p-2 font-black">{chapitre.totalPrevision}</td>
           <td className="border border-gray-400 p-2 font-black">{chapitre.totalRealisation}</td>
-          <td className="border border-gray-400 p-2 font-black">{getTaux(chapitre.totalRealisation, chapitre.totalPrevision)}</td>
+          <td className="border border-gray-400 p-2 font-black">{formatTaux(getTaux(chapitre.totalRealisation, chapitre.totalPrevision))}</td>
           <td className="border border-gray-400 p-2 font-black">{chapitre.totalEncours}</td>
         </tr>
       );
 
       chapitre.articles.forEach((article) => {
         rows.push(
-          <tr key={article._id} className="bg-gray-50">
+          <tr key={`article-${article._id}`} className="bg-gray-50">
             <td className="border border-gray-400 p-2"></td>
             <td
               className="border border-gray-400 p-2 font-bold cursor-pointer hover:bg-blue-100"
@@ -162,14 +162,14 @@ const ChapitreTableView: React.FC<Props> = ({
             <td className="border border-gray-400 p-2 font-bold">{article.nom}</td>
             <td className="border border-gray-400 p-2 font-bold">{article.totalPrevision}</td>
             <td className="border border-gray-400 p-2 font-bold">{article.totalRealisation}</td>
-            <td className="border border-gray-400 p-2 font-bold">{getTaux(article.totalRealisation, article.totalPrevision)}</td>
+            <td className="border border-gray-400 p-2 font-bold">{formatTaux(getTaux(article.totalRealisation, article.totalPrevision))}</td>
             <td className="border border-gray-400 p-2 font-bold">{article.totalEncours}</td>
           </tr>
         );
 
         article.paragraphesMers.forEach((paragrapheMer) => {
           rows.push(
-            <tr key={paragrapheMer._id}>
+            <tr key={`paragrapheMer-${paragrapheMer._id}`}>
               <td className="border border-gray-400 p-2"></td>
               <td className="border border-gray-400 p-2"></td>
               <td
@@ -183,14 +183,14 @@ const ChapitreTableView: React.FC<Props> = ({
               <td className="border border-gray-400 p-2 font-semibold">{paragrapheMer.nom}</td>
               <td className="border border-gray-400 p-2 font-semibold">{paragrapheMer.totalPrevision}</td>
               <td className="border border-gray-400 p-2 font-semibold">{paragrapheMer.totalRealisation}</td>
-              <td className="border border-gray-400 p-2 font-semibold">{getTaux(paragrapheMer.totalRealisation, paragrapheMer.totalPrevision)}</td>
+              <td className="border border-gray-400 p-2 font-semibold">{formatTaux(getTaux(paragrapheMer.totalRealisation, paragrapheMer.totalPrevision))}</td>
               <td className="border border-gray-400 p-2 font-semibold">{paragrapheMer.totalEncours}</td>
             </tr>
           );
 
           paragrapheMer.paragraphes.forEach((paragraphe) => {
             rows.push(
-              <tr key={paragraphe._id}>
+              <tr key={`paragraphe-${paragraphe._id}`}>
                 <td className="border border-gray-400 p-2"></td>
                 <td className="border border-gray-400 p-2"></td>
                 <td className="border border-gray-400 p-2"></td>
@@ -220,60 +220,45 @@ const ChapitreTableView: React.FC<Props> = ({
 
     const previsionTotal = totalSection.prevision;
     const realisationTotal = totalSection.realisation;
-    const tauxTotal = getTaux(totalSection.realisation, totalSection.prevision);
+    const tauxTotal = formatTaux(getTaux(totalSection.realisation, totalSection.prevision));
     const encoursTotal = totalSection.encours;
 
+    // Ajout des lignes totales avec keys uniques, sans fragment
     rows.push(
-      <>
-        {/* Ligne de total pour la section */}
-        <tr key="total-section" className="bg-slate-50 font-extrabold">
-          <td className="border border-gray-400 p-2 text-center" colSpan={5}>
-            TOTAL {section?.name} De {section?.titre ?? "Section inconnue"}
-          </td>
-          <td className="border border-gray-400 p-2">{previsionTotal}</td>
-          <td className="border border-gray-400 p-2">{realisationTotal}</td>
-          <td className="border border-gray-400 p-2">{tauxTotal}</td>
-          <td className="border border-gray-400 p-2">{encoursTotal}</td>
-        </tr>
-
-        {/* Vérification de "Section Investissement" */}
-        {section?.titre === "Investissement" && (
-          (() => {
-            // Trouver le chapitre numéro 65
-            const chapitre65 = chapitres.find(c => c.numero === 65);
-
-            // Calculs des totaux
-            const totalPrevisionReel = previsionTotal + (chapitre65?.prevision ?? 0);
-            const totalRealisationReel = realisationTotal + (chapitre65?.realisation ?? 0);
-            const totalEncoursReel = encoursTotal + (chapitre65?.encours ?? 0);
-
-            // Calcul du taux de base
-            const tauxBase = parseFloat(getTaux(totalSection.realisation, totalSection.prevision));
-
-            // Calcul du taux brut (en ajoutant le taux de chapitre65)
-            const tauxReelBrut = tauxBase + (chapitre65?.taux ?? 0);
-
-            // Arrondi du taux
-            const tauxReelArrondi = tauxReelBrut % 1 >= 0.5 ? Math.ceil(tauxReelBrut) : Math.floor(tauxReelBrut);
-
-            return (
-              <>
-                {/* Total Réel pour la section Investissement */}
-                <tr key="total-sectionReelle-1" className="bg-white font-extrabold">
-                  <td className="border border-gray-400 p-2 text-center" colSpan={5}>
-                    TOTAL {section.name} Réelles {section.titre}
-                  </td>
-                  <td className="border border-gray-400 p-2">{totalPrevisionReel}</td>
-                  <td className="border border-gray-400 p-2">{totalRealisationReel}</td>
-                  <td className="border border-gray-400 p-2">{tauxReelArrondi} %</td>
-                  <td className="border border-gray-400 p-2">{totalEncoursReel}</td>
-                </tr>
-              </>
-            );
-          })()
-        )}
-      </>
+      <tr key="total-section" className="bg-slate-50 font-extrabold">
+        <td className="border border-gray-400 p-2 text-center" colSpan={5}>
+          TOTAL {section?.name} De {section?.titre ?? "Section inconnue"}
+        </td>
+        <td className="border border-gray-400 p-2">{previsionTotal}</td>
+        <td className="border border-gray-400 p-2">{realisationTotal}</td>
+        <td className="border border-gray-400 p-2">{tauxTotal}</td>
+        <td className="border border-gray-400 p-2">{encoursTotal}</td>
+      </tr>
     );
+
+    if (section?.titre === "Investissement") {
+      const chapitre65 = chapitres.find(c => c.numero === 65);
+      const totalPrevisionReel = previsionTotal + (chapitre65?.prevision ?? 0);
+      const totalRealisationReel = realisationTotal + (chapitre65?.realisation ?? 0);
+      const totalEncoursReel = encoursTotal + (chapitre65?.encours ?? 0);
+
+      // Ici on additionne les taux comme nombres puis on arrondit proprement
+      const tauxBase = getTaux(totalSection.realisation, totalSection.prevision);
+      const tauxReelBrut = tauxBase + (chapitre65?.taux ?? 0);
+      const tauxReelArrondi = tauxReelBrut % 1 >= 0.5 ? Math.ceil(tauxReelBrut) : Math.floor(tauxReelBrut);
+
+      rows.push(
+        <tr key="total-section-reel-investissement" className="bg-white font-extrabold">
+          <td className="border border-gray-400 p-2 text-center" colSpan={5}>
+            TOTAL {section.name} Réelles {section.titre}
+          </td>
+          <td className="border border-gray-400 p-2">{totalPrevisionReel}</td>
+          <td className="border border-gray-400 p-2">{totalRealisationReel}</td>
+          <td className="border border-gray-400 p-2">{tauxReelArrondi} %</td>
+          <td className="border border-gray-400 p-2">{totalEncoursReel}</td>
+        </tr>
+      );
+    }
 
     return rows;
   }, [chapitres, section, totalSection]);
@@ -326,14 +311,14 @@ const ChapitreTableView: React.FC<Props> = ({
           Suivant ➡️
         </button>
       </div>
-      {selectedParagraphe && (
-  <ModalEditParagraphe
-    paragraphe={selectedParagraphe}
-    onClose={() => setSelectedParagraphe(null)}
-    onSave={onSaveParagraphe}
-  />
-)}
 
+      {selectedParagraphe && (
+        <ModalEditParagraphe
+          paragraphe={selectedParagraphe}
+          onClose={() => setSelectedParagraphe(null)}
+          onSave={onSaveParagraphe}
+        />
+      )}
     </div>
   );
 };

@@ -26,42 +26,6 @@ class ParagrapheMerService {
             throw new Error(`Erreur lors de la création du paragraphe: ${error.message}`);
         }
     }
-
-    // static async getParagraphesByArticle(articleId) {
-    //     try {
-    //         const paragraphes = await Paragraphe.find({ articleId });
-    //         return paragraphes;
-    //     } catch (error) {
-    //         throw new Error(`Erreur lors de la récupération des paragraphes: ${error.message}`);
-    //     }
-    // }
-
-    // static async getPrevisionsEtEmissionsByArticle(articleId) {
-    //     try {
-    //         // Agrégation pour calculer la somme des prévisions et des émissions
-    //         const result = await Paragraphe.aggregate([
-    //             { $match: { articleId } },
-    //             {
-    //                 $group: {
-    //                     _id: "$articleId",
-    //                     totalPrevision: { $sum: "$prevision" },
-    //                     totalEmission: { $sum: "$emission" }
-    //                 }
-    //             }
-    //         ]);
-
-    //         if (result.length === 0) {
-    //             return {
-    //                 totalPrevision: 0,
-    //                 totalEmission: 0
-    //             };
-    //         }
-
-    //         return result[0];
-    //     } catch (error) {
-    //         throw new Error(`Erreur lors de la récupération des prévisions et émissions: ${error.message}`);
-    //     }
-    // }
 }
 
 module.exports = ParagrapheMerService;

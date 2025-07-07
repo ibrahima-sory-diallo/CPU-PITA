@@ -26,7 +26,7 @@ function Header({ darkMode, toggleDarkMode, selectedItem }: HeaderProps) {
   return (
     <div className="fixed w-full  z-50 flex items-center justify-between bg-white px-7 py-3 dark:bg-slate-700 dark:text-gray-300">
       <h1 className="font-bold">{selectedItem}</h1>
-      <div className=" mr-40 flex items-center gap-3">
+      <div className=" mr-44 flex items-center gap-3">
         <button
           className="rounded-md dark:bg-slate-600 dark:text-slate-300 bg-slate-200"
           onClick={toggleDarkMode}

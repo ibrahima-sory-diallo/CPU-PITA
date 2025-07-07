@@ -28,6 +28,8 @@ interface SectionFonctionnementProps {
   setSelectedItem: (item: string | null) => void;
 }
 
+// ... (imports identiques)
+
 export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
   selectedItem,
 }) => {
@@ -42,8 +44,6 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [viewDetails, setViewDetails] = useState<boolean>(false);
 
-
-
   const fetchAnnees = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/comptable/tousAnnee`);
@@ -51,25 +51,19 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
       setAnnees(data.map((annee: { annee: number }) => annee.annee));
     } catch (error) {
       setError('Erreur lors de la récupération des années.');
-      console.error('Erreur lors de la récupération des années:', error);
+      console.error(error);
     }
   };
 
   const fetchSections = async (anneeId: number) => {
     setLoadingSections(true);
-    const url = `${import.meta.env.VITE_API_URL}/api/section/sections/annee/${anneeId}`;
     try {
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setSections(data);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Aucune section trouvée pour cette année.');
-      }
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/section/sections/annee/${anneeId}`);
+      const data = await response.json();
+      setSections(data);
     } catch (error) {
       setError('Erreur lors de la récupération des sections.');
-      console.error('Erreur lors de la récupération des sections:', error);
+      console.error(error);
     } finally {
       setLoadingSections(false);
     }
@@ -79,14 +73,12 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
     setLoadingChapitres(true);
     setChapitres([]);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/chapitre/getChapitresBySection/${sectionId}`
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chapitre/getChapitresBySection/${sectionId}`);
       const data = await response.json();
       setChapitres(data.chapitres || []);
     } catch (error) {
       setError('Erreur lors de la récupération des chapitres.');
-      console.error('Erreur lors de la récupération des chapitres:', error);
+      console.error(error);
     } finally {
       setLoadingChapitres(false);
     }
@@ -95,9 +87,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
   const fetchChapitresDetails = async (sectionId: string, annee: string) => {
     setLoadingChapitres(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/chapitre/sectionDetails/${sectionId}/${annee}`
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chapitre/sectionDetails/${sectionId}/${annee}`);
       const data = await response.json();
       if (data.section && data.section.chapitres) {
         setChapitres(data.section.chapitres || []);
@@ -106,7 +96,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
       }
     } catch (error) {
       setError('Erreur lors de la récupération des chapitres.');
-      console.error('Erreur lors de la récupération des chapitres:', error);
+      console.error(error);
     } finally {
       setLoadingChapitres(false);
     }
@@ -122,9 +112,8 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
     }
   }, [selectedAnneeId]);
 
-  const handleAnneeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedYear = parseInt(event.target.value, 10);
-    setSelectedAnneeId(selectedYear);
+  const handleAnneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAnneeId(parseInt(e.target.value, 10));
   };
 
   const handleChapitreClick = (sectionId: string) => {
@@ -144,9 +133,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
     setIsFormOpen(true);
   };
 
-  const handleFormClose = () => {
-    setIsFormOpen(false);
-  };
+  const handleFormClose = () => setIsFormOpen(false);
 
   const refreshChapitres = (sectionId: string) => {
     if (viewDetails) {
@@ -157,13 +144,11 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
   };
 
   const handleChapitreCreated = () => {
-    refreshChapitres(selectedSectionId!);
+    if (selectedSectionId) {
+      refreshChapitres(selectedSectionId);
+    }
     setIsFormOpen(false);
   };
-
-
-  
-  
 
   const filteredSections = selectedItem
     ? sections.filter((section) => section.name === selectedItem)
@@ -172,18 +157,18 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
   return (
     <div className="w-full">
       <div>
-      <h1 className="text-3xl text-center font-bold ">Sections</h1>  
-      <select
-        value={selectedAnneeId}
-        onChange={handleAnneeChange}
-        className=" p-2 border rounded mb-4  "
-      >
-        {annees.map((annee) => (
-          <option key={annee} value={annee}>
-            {annee}
-          </option>
-        ))}
-      </select>
+        <h1 className="text-3xl text-center font-bold">Sections</h1>
+        <select
+          value={selectedAnneeId}
+          onChange={handleAnneeChange}
+          className="p-2 border rounded mb-4"
+        >
+          {annees.map((annee) => (
+            <option key={annee} value={annee}>
+              {annee}
+            </option>
+          ))}
+        </select>
       </div>
 
       {loadingSections ? (
@@ -195,7 +180,7 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
           {filteredSections.map((section) => (
             <div key={section._id} className="bg-white p-3 rounded shadow m-1">
               <h2 className="text-xl font-bold">{section.name}</h2>
-              <p className='font-bold'>TITRE :{section.titre}</p>
+              <p className="font-bold">TITRE : {section.titre}</p>
 
               <button
                 className="mt-2 px-4 py-2 bg-teal-700 text-white rounded m-1"
@@ -218,12 +203,12 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
               >
                 Créer chapitre
               </button>
-
-
             </div>
           ))}
         </div>
       )}
+
+      {/* Affichage chapitres */}
       {viewDetails ? (
         (() => {
           const selectedSection = sections.find((s) => s._id === selectedSectionId);
@@ -240,11 +225,13 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
           <ChapitreTables
             chapitres={chapitres}
             refreshChapitres={refreshChapitres}
+            section={sections.find((s) => s._id === selectedSectionId) || null}
+            sections={sections} // ✅ ici : prop ajoutée
           />
         )
       )}
 
-
+      {/* Formulaire création */}
       {isFormOpen && selectedSectionId && (
         <ChapitreForm
           sectionId={selectedSectionId}
@@ -252,7 +239,6 @@ export const SectionFonctionnement: React.FC<SectionFonctionnementProps> = ({
           onSuccess={handleChapitreCreated}
         />
       )}
-
     </div>
   );
 };

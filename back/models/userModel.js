@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-        trim: true,
+        trim: true,  
         lowercase: true, // Utilisation de lowercase directement dans le schéma
         validate: [isEmail, 'Email non valide']
     },
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         maxlength: 55
     },
     picture: {
-        type: String,
+        type: String,  
         default: './uploads/profil/randun-user.png'
     },
     bio: {
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         maxlength: 1025
     },
     role: {
-        type: String,
+        type: String,  
         enum: ['admin', 'utilisateur'], // 🔥 Rôles autorisés
         default: 'utilisateur' // 🔥 Par défaut, c'est un utilisateur
     }

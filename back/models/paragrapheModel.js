@@ -38,8 +38,8 @@ const paragrapheSchema = new Schema({
     }, 
     statut: {
         type: String,
-        enum: ["active", "clôturé"],
-        default: "active",
+        enum: ["ouvert", "fermé"],
+        default: "ouvert",
     },
     paragrapheMerId: { 
         type: Schema.Types.ObjectId, 
@@ -85,36 +85,43 @@ paragrapheSchema.pre('save', async function(next) {
 // Middleware post-save pour mettre à jour la realisation du chapitre
 paragrapheSchema.post('save', async function(doc, next) {
     try {
-        const paragrapheMer = await ParagrapheMer.findById(doc.paragrapheMerId);
-        if (!paragrapheMer) throw new Error('ParagrapheMer non trouvé');
-
-        const article = await Article.findById(paragrapheMer.articleId);
-        if (!article) throw new Error('Article non trouvé');
-
-        const paragraphesMers = await ParagrapheMer.find({ _id: { $in: article.paragraphesMers } }).populate({
-            path: 'paragraphes',
-            select: 'realisation'
-        });
-
-        let totalRealisation = 0;
-        for (const mer of paragraphesMers) {
-            for (const p of mer.paragraphes) {
-                totalRealisation += p.realisation || 0;
-            }
+      const session = doc.$session();  // Récupérer la session MongoDB associée au document (si elle existe)
+  
+      const findOptions = session ? { session } : {};
+  
+      const paragrapheMer = await ParagrapheMer.findById(doc.paragrapheMerId, null, findOptions);
+      if (!paragrapheMer) throw new Error('ParagrapheMer non trouvé');
+  
+      const article = await Article.findById(paragrapheMer.articleId, null, findOptions);
+      if (!article) throw new Error('Article non trouvé');
+  
+      // Ici tu dois t'assurer que article.paragraphesMers est bien défini et c'est un tableau d'ObjectId
+      const paragraphesMers = await ParagrapheMer.find({ _id: { $in: article.paragraphesMers } }, null, findOptions).populate({
+        path: 'paragraphes',
+        select: 'realisation',
+        options: findOptions  // transmettre la session aussi à populate
+      });
+  
+      let totalRealisation = 0;
+      for (const mer of paragraphesMers) {
+        for (const p of mer.paragraphes) {
+          totalRealisation += p.realisation || 0;
         }
-
-        const chapitre = await Chapitre.findById(article.chapitreId);
-        if (!chapitre) throw new Error('Chapitre non trouvé');
-
-        chapitre.realisation = totalRealisation;
-        await chapitre.save();
-
-        next();
+      }
+  
+      const chapitre = await Chapitre.findById(article.chapitreId, null, findOptions);
+      if (!chapitre) throw new Error('Chapitre non trouvé');
+  
+      chapitre.realisation = totalRealisation;
+      await chapitre.save(findOptions);
+  
+      next();
     } catch (error) {
-        console.error('Erreur post-save paragraphe:', error);
-        next(error);
+      console.error('Erreur post-save paragraphe:', error);
+      next(error);
     }
-});
+  });
+  
 
 const Paragraphe = mongoose.model('Paragraphe', paragrapheSchema);
 
