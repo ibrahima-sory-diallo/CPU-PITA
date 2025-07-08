@@ -19,8 +19,6 @@ const FileList: React.FC = () => {
   const [expandedDossier, setExpandedDossier] = useState<string | null>(null);
 
   const [fichiersEnCours, setFichiersEnCours] = useState<{ [key: string]: boolean }>({});
-  const [renamingFile, setRenamingFile] = useState<string | null>(null);
-  const [newFileName, setNewFileName] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -141,17 +139,6 @@ const FileList: React.FC = () => {
                         </button>
                       </div>
 
-                      {renamingFile === filePath && (
-                        <div className="mt-2 flex gap-2">
-                          <input
-                            value={newFileName}
-                            onChange={(e) => setNewFileName(e.target.value)}
-                            className="border rounded px-2 py-1"
-                          />
-                          <button onClick={() => handleRename(filePath, newFileName)} className="text-green-600 hover:underline">Confirmer</button>
-                          <button onClick={() => setRenamingFile(null)} className="text-gray-500 hover:underline">Annuler</button>
-                        </div>
-                      )}
                     </li>
                   );
                 })}
