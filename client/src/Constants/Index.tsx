@@ -7,7 +7,6 @@ import {
   FaFolderOpen,
   FaPlus,
   FaList,
-  FaEnvelope,
   FaCalendarAlt,
   FaSitemap
 } from "react-icons/fa";
