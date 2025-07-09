@@ -53,7 +53,13 @@ module.exports.signIn = async (req, res) => {
 };
 
 module.exports.logout = async (req, res) => {
-    // Supprimer le cookie 'jwt' en le réinitialisant avec une durée d'expiration immédiate
-    res.cookie('jwt', '', { maxAge: 1 });  // Définit le cookie 'jwt' avec une durée d'expiration de 1 milliseconde
-    res.status(200).json({ message: 'Déconnexion réussie' });  // Réponse indiquant que la déconnexion a réussi
-}
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    secure: true, // Important : requis pour les cookies cross-domain en HTTPS
+    sameSite: "None", // Autorise les cookies entre Render (API) et Vercel (front)
+    expires: new Date(0), // Expire immédiatement
+  });
+
+  res.status(200).json({ message: "Déconnexion réussie" });
+};
+
